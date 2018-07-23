@@ -1,0 +1,13 @@
+<p>
+  numeric-input works!
+</p>
+
+<input #inputVal 
+        type="text"
+        [minLength]="minLength"
+        [maxLength]="maxLength"
+        [placeholder]="placeholder"
+        (keydown)="validateKey($event)"
+        (keyup)="ReplaceKey($event)"
+        [(ngModel)]="value"
+        >
