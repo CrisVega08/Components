@@ -28,7 +28,6 @@ export class NumericInputComponent implements OnInit {
 
   ngOnInit() {
     this.patternValid = new RegExp(this.pattern, 'i');
-    console.log('patter', this.patternValid);
   }
 
   validateKey(el: any) {
