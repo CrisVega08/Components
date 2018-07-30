@@ -1,5 +1,6 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, forwardRef } from '@angular/core';
 import { FormControl, ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS } from '@angular/forms';
+
 @Component({
   selector: 'app-numeric-input',
   templateUrl: './numeric-input.component.html',
@@ -7,9 +8,10 @@ import { FormControl, ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS } f
   providers: [
     {
         provide: NG_VALUE_ACCESSOR,
-        useExisting: NumericInputComponent,
+        useExisting: forwardRef(() => NumericInputComponent),
         multi: true,
-    }
+    },
+
   ]
 })
 export class NumericInputComponent implements OnInit, ControlValueAccessor {
@@ -18,7 +20,8 @@ export class NumericInputComponent implements OnInit, ControlValueAccessor {
   @Input() pattern = '([0-9])|(,)|(arrow)|(space)';
   @Input() classStyle = '';
   @Input() fcontrol: FormControl;
-  @Output() valueOut = new EventEmitter<string>();
+
+  @Output() valueChanged = new EventEmitter<any>();
 
   value = '';
   previusValue;
@@ -42,7 +45,6 @@ export class NumericInputComponent implements OnInit, ControlValueAccessor {
       el.preventDefault();
     }
     this.keydownValue = (this.value && this.value.length > 0) ? this.value.replace(/\D/g, '') : '';
-    this.propagateChange(this.value);
   }
 
   ReplaceKey(el) {
@@ -50,7 +52,7 @@ export class NumericInputComponent implements OnInit, ControlValueAccessor {
     el.target.value = this.checkDecimal();
     this.previusValue = el.target.value.replace(/\D/g, '');
     this.choosePosition(el);
-    this.propagateChange(this.value);
+    this.checkValue(this.value);
   }
 
   choosePosition(el) {
@@ -104,8 +106,7 @@ export class NumericInputComponent implements OnInit, ControlValueAccessor {
     return newValue;
   }
 
-  checkValue(target) {
-    let value = target.value;
+  checkValue(value){
     this.divideNumber(value);
     if (this.flagDecimal && this.splitValue[1].length === 0) {
       value = value.concat('0');
@@ -116,13 +117,19 @@ export class NumericInputComponent implements OnInit, ControlValueAccessor {
     this.value = value;
     value = Number(value.replace(/\./g, '').replace(/,/g, '.'));
 
-    console.log('valor a emitir', value);
+    this.propagateChange(value);
+    this.valueChanged.emit(value);
   }
 
+  onInput(value) {
+    this.divideNumber(value);
+    this.value = this.checkDecimal();
+  }
+
+  /** Methods for use component in forms */
   public writeValue(val: any) {
     if (val !== undefined && val !== null) {
-      console.log(val, 'value in writeValue');
-      this.value = val;
+      this.onInput(val);
     }
   }
 
@@ -133,6 +140,7 @@ export class NumericInputComponent implements OnInit, ControlValueAccessor {
   // not used, used for touch input
   public propagateChange = (_: any) => { };
 
-  public registerOnTouched() { }
+  public registerOnTouched(fn: () => {}): void {
+    // this.onTouched = fn;
+  }
 }
-

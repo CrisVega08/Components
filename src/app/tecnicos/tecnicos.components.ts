@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import { Observable } from 'rxjs/internal/Observable';
+import { validateRange } from '../validators/customValidator';
 
 @Component({
   selector: 'app-tecnicos',
@@ -18,7 +19,7 @@ export class TecnicosComponent implements OnInit {
         'username': new FormControl(null, [Validators.required, this.forbiddenNames.bind(this)]),
         'email': new FormControl(null, [Validators.required, Validators.email], this.forbiddenEmailAsync.bind(this)),
       }),
-      'identification': new FormControl('12345'),
+      'identification': new FormControl('12345', [Validators.required, validateRange]),
       'gender': new FormControl('male'),
       'hobbies': new FormArray([])
     });
