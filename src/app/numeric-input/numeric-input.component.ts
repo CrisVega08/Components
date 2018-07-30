@@ -1,18 +1,25 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { FormControl, ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS } from '@angular/forms';
 @Component({
   selector: 'app-numeric-input',
   templateUrl: './numeric-input.component.html',
-  styleUrls: ['./numeric-input.component.css']
+  styleUrls: ['./numeric-input.component.css'],
+  providers: [
+    {
+        provide: NG_VALUE_ACCESSOR,
+        useExisting: NumericInputComponent,
+        multi: true,
+    }
+  ]
 })
-export class NumericInputComponent implements OnInit {
-  @Input() precision: number = 10;
-  @Input() scale: number = 2;
-  @Input() pattern: string = '([0-9])|(,)|(arrow)|(space)';
-
+export class NumericInputComponent implements OnInit, ControlValueAccessor {
+  @Input() precision = 10;
+  @Input() scale = 2;
+  @Input() pattern = '([0-9])|(,)|(arrow)|(space)';
+  @Input() classStyle = '';
+  @Input() fcontrol: FormControl;
   @Output() valueOut = new EventEmitter<string>();
 
-  myForm: FormGroup;
   value = '';
   previusValue;
   patternValid;
@@ -20,11 +27,7 @@ export class NumericInputComponent implements OnInit {
   flagDecimal = false;
   keydownValue = '';
   decimalValue;
-  constructor(fb: FormBuilder) {
-    this.myForm = fb.group({
-      'value': ['', Validators.required]
-    });
-  }
+  constructor() {}
 
   ngOnInit() {
     this.patternValid = new RegExp(this.pattern, 'i');
@@ -39,6 +42,7 @@ export class NumericInputComponent implements OnInit {
       el.preventDefault();
     }
     this.keydownValue = (this.value && this.value.length > 0) ? this.value.replace(/\D/g, '') : '';
+    this.propagateChange(this.value);
   }
 
   ReplaceKey(el) {
@@ -46,6 +50,7 @@ export class NumericInputComponent implements OnInit {
     el.target.value = this.checkDecimal();
     this.previusValue = el.target.value.replace(/\D/g, '');
     this.choosePosition(el);
+    this.propagateChange(this.value);
   }
 
   choosePosition(el) {
@@ -113,5 +118,21 @@ export class NumericInputComponent implements OnInit {
 
     console.log('valor a emitir', value);
   }
+
+  public writeValue(val: any) {
+    if (val !== undefined && val !== null) {
+      console.log(val, 'value in writeValue');
+      this.value = val;
+    }
+  }
+
+  public registerOnChange(fn: any) {
+    this.propagateChange = fn;
+  }
+
+  // not used, used for touch input
+  public propagateChange = (_: any) => { };
+
+  public registerOnTouched() { }
 }
 

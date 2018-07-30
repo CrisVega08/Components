@@ -1,9 +1,1 @@
-<p>
-    numeric-input works!
-</p>
-
-<input #inputVal type="text" 
-    (keydown)="validateKey($event)" 
-    (keyup)="ReplaceKey($event)" 
-    (blur)="checkValue($event.target)" 
-    [(ngModel)]="value">
+<input #inputVal type="text" [class]="classStyle" (keydown)="validateKey($event)" (keyup)="ReplaceKey($event)" (blur)="checkValue($event.target)" [(ngModel)]="value">

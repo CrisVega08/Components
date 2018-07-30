@@ -5,10 +5,14 @@ import { AppComponent } from './app.component';
 import { NumericInputComponent } from './numeric-input/numeric-input.component';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TecnicosComponent } from './tecnicos/tecnicos.components';
+
+
 @NgModule({
   declarations: [
     AppComponent,
-    NumericInputComponent
+    NumericInputComponent,
+    TecnicosComponent
   ],
   imports: [
     BrowserModule,
