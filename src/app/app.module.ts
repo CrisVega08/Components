@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
+import { AddressModule } from './address/address.module';
 import { AppComponent } from './app.component';
 import { NumericInputComponent } from './numeric-input/numeric-input.component';
 
@@ -12,12 +13,13 @@ import { TecnicosComponent } from './tecnicos/tecnicos.components';
   declarations: [
     AppComponent,
     NumericInputComponent,
-    TecnicosComponent
+    TecnicosComponent,
   ],
   imports: [
     BrowserModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    AddressModule
   ],
   providers: [],
   bootstrap: [AppComponent]

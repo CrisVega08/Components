@@ -1,4 +1,4 @@
-import { FormControl } from "@angular/forms";
+import { FormControl } from '@angular/forms';
 
 export function validateRange(c: FormControl) {
     const err = {

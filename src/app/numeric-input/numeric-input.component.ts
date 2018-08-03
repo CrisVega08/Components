@@ -1,18 +1,17 @@
 import { Component, OnInit, Input, Output, EventEmitter, forwardRef } from '@angular/core';
 import { FormControl, ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS } from '@angular/forms';
 
+export const CUSTOM_INPUT_CONTROL_VALUE_ACCESSOR: any = {
+  provide: NG_VALUE_ACCESSOR,
+  useExisting: forwardRef(() => NumericInputComponent),
+  multi: true
+};
+
 @Component({
   selector: 'app-numeric-input',
   templateUrl: './numeric-input.component.html',
   styleUrls: ['./numeric-input.component.css'],
-  providers: [
-    {
-        provide: NG_VALUE_ACCESSOR,
-        useExisting: forwardRef(() => NumericInputComponent),
-        multi: true,
-    },
-
-  ]
+  providers: [ CUSTOM_INPUT_CONTROL_VALUE_ACCESSOR]
 })
 export class NumericInputComponent implements OnInit, ControlValueAccessor {
   @Input() precision = 10;
@@ -143,4 +142,6 @@ export class NumericInputComponent implements OnInit, ControlValueAccessor {
   public registerOnTouched(fn: () => {}): void {
     // this.onTouched = fn;
   }
+
+
 }
